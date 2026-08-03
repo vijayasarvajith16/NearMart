@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, MapPin } from 'lucide-react';
+import { Package, MapPin, MessageCircle } from 'lucide-react';
 import api from '../api/axios';
 import OrderStatusBadge from '../components/OrderStatusBadge';
 
@@ -107,6 +107,53 @@ export default function OrderHistory() {
                     {order.deliveryAddress && (
                       <div style={{ fontSize: '0.83rem', color: 'var(--text-muted)', background: 'var(--bg-elevated)', borderRadius: 'var(--radius-sm)', padding: '10px 12px' }}>
                         📍 Delivery: {order.deliveryAddress} — PIN: {order.pincode}
+                      </div>
+                    )}
+
+                    {order.vendorId?.phone && (
+                      <div style={{
+                        marginTop: 12,
+                        padding: '14px 16px',
+                        background: 'rgba(34, 197, 94, 0.06)',
+                        borderRadius: 'var(--radius-md)',
+                        border: '1px solid rgba(34, 197, 94, 0.15)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: 16,
+                        flexWrap: 'wrap'
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: 2 }}>Need help with this order?</div>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Contact vendor at: <strong style={{ color: 'var(--text-secondary)' }}>{order.vendorId.phone}</strong></div>
+                        </div>
+                        <a
+                          href={`https://wa.me/91${order.vendorId.phone}?text=${encodeURIComponent(`Hi, I placed Order #${order._id.slice(-8)}`)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn"
+                          style={{
+                            background: '#25D366',
+                            border: 'none',
+                            color: '#fff',
+                            gap: 8,
+                            padding: '10px 18px',
+                            fontSize: '0.85rem',
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            borderRadius: 'var(--radius-md)',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            transition: 'var(--transition)',
+                            boxShadow: '0 2px 8px rgba(37, 211, 102, 0.25)',
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.filter = 'brightness(0.9)'}
+                          onMouseLeave={(e) => e.currentTarget.style.filter = 'none'}
+                        >
+                          <MessageCircle size={16} />
+                          Chat on WhatsApp
+                        </a>
                       </div>
                     )}
                   </div>

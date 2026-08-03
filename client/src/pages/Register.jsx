@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Eye, EyeOff, UserPlus, ShoppingBag, Store } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, UserPlus, ShoppingBag, Store, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import toast from 'react-hot-toast';
@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 export default function Register() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'buyer' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', phone: '', role: 'buyer' });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -96,6 +96,25 @@ export default function Register() {
             <div className="form-input-icon">
               <Mail size={16} className="input-icon" />
               <input type="email" name="email" className="form-input" placeholder="you@example.com" value={form.email} onChange={handleChange} required />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Phone Number</label>
+            <div className="form-input-icon">
+              <Phone size={16} className="input-icon" />
+              <input
+                type="tel"
+                name="phone"
+                className="form-input"
+                placeholder="10-digit mobile number"
+                value={form.phone}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  setForm(f => ({ ...f, phone: val }));
+                }}
+                required
+              />
             </div>
           </div>
 

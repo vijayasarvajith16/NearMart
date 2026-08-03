@@ -18,6 +18,10 @@ router.post(
     body('email').isEmail().withMessage('Valid email required'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
     body('role').isIn(['buyer', 'vendor']).withMessage('Role must be buyer or vendor'),
+    body('phone')
+      .trim()
+      .isLength({ min: 10, max: 10 }).withMessage('Phone number must be exactly 10 digits')
+      .isNumeric().withMessage('Phone number must contain only numbers'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -25,7 +29,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password, role } = req.body;
+    const { name, email, password, phone, role } = req.body;
 
     try {
       const existing = await User.findOne({ email });
@@ -36,12 +40,12 @@ router.post(
       const salt = await bcrypt.genSalt(10);
       const passwordHash = await bcrypt.hash(password, salt);
 
-      const user = await User.create({ name, email, passwordHash, role });
+      const user = await User.create({ name, email, passwordHash, phone, role });
 
       return res.status(201).json({
         message: 'Registration successful.',
         token: generateToken(user._id),
-        user: { id: user._id, name: user.name, email: user.email, role: user.role },
+        user: { id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone },
       });
     } catch (err) {
       console.error(err);
@@ -79,7 +83,7 @@ router.post(
       return res.json({
         message: 'Login successful.',
         token: generateToken(user._id),
-        user: { id: user._id, name: user.name, email: user.email, role: user.role },
+        user: { id: user._id, name: user.name, email: user.email, role: user.role, phone: user.phone },
       });
     } catch (err) {
       console.error(err);

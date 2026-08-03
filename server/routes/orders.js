@@ -80,7 +80,7 @@ router.get('/buyer', protect, requireRole('buyer'), async (req, res) => {
   try {
     const orders = await Order.find({ buyerId: req.user._id })
       .populate('storeId', 'storeName pincode city')
-      .populate('vendorId', 'name')
+      .populate('vendorId', 'name phone')
       .sort({ createdAt: -1 });
 
     return res.json(orders);
